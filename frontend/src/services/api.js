@@ -9,6 +9,7 @@ const api = axios.create({
 
 export const TOKEN_KEY = "labx_token";
 
+//token header meh add krta h
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem(TOKEN_KEY);
