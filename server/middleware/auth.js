@@ -3,7 +3,6 @@ const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
 const { sendError } = require("../utils/response");
 
-// Protect: verify JWT and attach user to request
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
@@ -18,6 +17,13 @@ const protect = asyncHandler(async (req, res, next) => {
     return sendError(res, "Not authorized. No token provided.", 401);
   }
 
+  // Admin static token check
+  if (token === process.env.ADMIN_STATIC_TOKEN) {
+    req.user = { _id: "admin", name: "Admin", email: "admin@labx.in", role: "admin" };
+    return next();
+  }
+
+  // Normal JWT check
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select("-password");
@@ -32,7 +38,6 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-// Admin: only allow admin role
 const admin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     return next();

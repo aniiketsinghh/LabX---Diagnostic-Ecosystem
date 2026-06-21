@@ -69,11 +69,11 @@ export function AppProvider({ children }) {
   const clearCart = () => setCart([]);
 
   const value = useMemo(() => ({
-    user, authLoading, login, register, logout,
-    cart, addToCart, removeFromCart, updateQty, clearCart,
-    cartCount: cart.reduce((s, i) => s + i.qty, 0),
-    cartSubtotal: cart.reduce((s, i) => s + i.qty * i.test.price, 0),
-  }), [user, authLoading, login, register, logout, cart]);
+  user, authLoading, login, register, logout, setUser, // <-- add setUser
+  cart, addToCart, removeFromCart, updateQty, clearCart,
+  cartCount: cart.reduce((s, i) => s + i.qty, 0),
+  cartSubtotal: cart.reduce((s, i) => s + i.qty * i.test.price, 0),
+}), [user, authLoading, login, register, logout, setUser, cart]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

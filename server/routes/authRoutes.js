@@ -22,3 +22,12 @@ router.post("/login", loginRules, validate, login);
 router.get("/profile", protect, getProfile);
 
 module.exports = router;
+
+
+
+
+
+
+
+
+

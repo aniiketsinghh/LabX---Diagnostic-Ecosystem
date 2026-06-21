@@ -51,13 +51,9 @@ function Tracking() {
             </ol>
           </div>
 
-          <aside className="space-y-4">
+          {/* <aside className="space-y-4">
             <div className="p-5 rounded-2xl bg-card border border-border shadow-soft text-sm space-y-3">
-              <div className="font-semibold">Booking details</div>
-              <div className="flex items-center gap-2 text-muted-foreground"><User className="size-4" /> {order?.patient?.fullName || order?.patient || "—"}</div>
-              <div className="flex items-center gap-2 text-muted-foreground"><MapPin className="size-4" /> {order?.address || "—"}</div>
-              <div className="flex items-center gap-2 text-muted-foreground"><Clock className="size-4" /> {order?.slot || (order?.createdAt && new Date(order.createdAt).toLocaleString())}</div>
-              <div className="pt-2 border-t border-border font-semibold text-foreground">Total ₹{order?.total ?? "—"}</div>
+              
             </div>
             {order?.technician && (
               <div className="p-5 rounded-2xl bg-card border border-border shadow-soft">
@@ -71,7 +67,7 @@ function Tracking() {
                 </div>
               </div>
             )}
-          </aside>
+          </aside> */}
         </div>
       </Container>
     </div>

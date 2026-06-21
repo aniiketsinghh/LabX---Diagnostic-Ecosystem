@@ -30,3 +30,12 @@ export async function updateOrderStatus(id, status) {
   const { data } = await api.patch(`/orders/${id}`, { status });
   return normalize(data?.order || data);
 }
+export async function createRazorpayOrder(payload) {
+  const { data } = await api.post("/orders/razorpay-order", payload);
+  return data?.data;
+}
+
+export async function verifyPayment(payload) {
+  const { data } = await api.post("/orders/verify-payment", payload);
+  return normalize(data?.order || data?.data?.order || data);
+}

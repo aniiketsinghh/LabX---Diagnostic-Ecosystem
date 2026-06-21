@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
-
 const {
+  createRazorpayOrder,
+  verifyPaymentAndCreateOrder,
   createOrder,
   getMyOrders,
   getAllOrders,
@@ -11,17 +12,21 @@ const {
 const { protect, admin } = require("../middleware/auth");
 const validate = require("../middleware/validate");
 
-const orderRules = [
-  body("tests").isArray({ min: 1 }).withMessage("At least one test is required"),
-  body("bookingDate").notEmpty().withMessage("Booking date is required"),
-  body("bookingSlot").notEmpty().withMessage("Booking slot is required"),
-  body("address").notEmpty().withMessage("Address is required"),
+const verifyRules = [
+  body("tests").isArray({ min: 1 }),
+  body("bookingDate").notEmpty(),
+  body("bookingSlot").notEmpty(),
+  body("address").notEmpty(),
+  body("razorpay_order_id").notEmpty(),
+  body("razorpay_payment_id").notEmpty(),
+  body("razorpay_signature").notEmpty(),
 ];
 
-// IMPORTANT: /my must come before /:id to avoid conflict
 router.get("/my", protect, getMyOrders);
 router.get("/", protect, admin, getAllOrders);
-router.post("/", protect, orderRules, validate, createOrder);
+router.post("/", protect, createOrder);        // <-- ye missing tha
+router.post("/razorpay-order", protect, createRazorpayOrder);
+router.post("/verify-payment", protect, verifyRules, validate, verifyPaymentAndCreateOrder);
 router.patch("/:id", protect, admin, updateOrderStatus);
 
 module.exports = router;

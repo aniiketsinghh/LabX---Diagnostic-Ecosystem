@@ -42,14 +42,14 @@ function AdminTests() {
     e.preventDefault();
     const f = e.target;
     const payload = {
-      title: f.title.value,
-      price: Number(f.price.value),
-      mrp: Number(f.mrp.value),
-      category: f.category.value,
-      categorySlug: f.category.value.toLowerCase().replace(/\s+/g, "-"),
-      description: f.description.value,
-      reportIn: f.reportIn.value || "24 hrs",
-    };
+  title: f.title.value,
+  price: Number(f.price.value),
+  mrp: Number(f.mrp.value),
+  category: f.category.value,
+  categorySlug: f.category.value.toLowerCase().replace(/\s+/g, "-"),
+  description: f.description.value,
+  reportTime: f.reportIn.value || "24 hrs",  // yahi field name backend expect karta hai
+};
     if (editing) updateM.mutate({ id: editing.id, payload });
     else createM.mutate(payload);
   };

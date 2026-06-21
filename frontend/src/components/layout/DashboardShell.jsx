@@ -4,8 +4,6 @@ import { Activity, Bell, ChevronDown, LogOut, Menu, X, Search } from "lucide-rea
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
 
-
-
 export function DashboardShell({ items, title, requireRole }) {
   const { user, authLoading, logout } = useApp();
   const nav = useNavigate();
@@ -14,7 +12,7 @@ export function DashboardShell({ items, title, requireRole }) {
 
   useEffect(() => {
     if (authLoading) return;
-    if (requireRole && user.role !== requireRole) nav({ to: "/login" });
+    if (requireRole && (!user || user.role !== requireRole)) nav({ to: "/login" });
   }, [user, authLoading, requireRole, nav]);
 
   if (authLoading) {
@@ -24,6 +22,7 @@ export function DashboardShell({ items, title, requireRole }) {
       </div>
     );
   }
+
   if (!user) return null;
 
   return (
@@ -39,22 +38,31 @@ export function DashboardShell({ items, title, requireRole }) {
         </div>
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
           {items.map((it) => {
-            const active = path === it.to || it.to !== "/" && path.startsWith(it.to + "/");
+            const active = path === it.to || (it.to !== "/admin" && it.to !== "/dashboard" && path.startsWith(it.to));
             return (
               <Link key={it.to} to={it.to} onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-medium transition ${active ? "gradient-primary text-white shadow-soft" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
+                className={`flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-medium transition ${active ? "gradient-primary text-white shadow-soft" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
                 <it.icon className="size-4" /> {it.label}
-              </Link>);
+              </Link>
+            );
           })}
         </nav>
         <div className="m-3 p-3 rounded-2xl bg-muted shrink-0">
           <div className="flex items-center gap-3">
-            <div className="size-10 rounded-full gradient-primary grid place-items-center text-white font-semibold shrink-0">{user.name[0]}</div>
+            <div className="size-10 rounded-full gradient-primary grid place-items-center text-white font-semibold shrink-0">
+              {user.name?.[0] ?? "A"}
+            </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold truncate">{user.name}</div>
               <div className="text-xs text-muted-foreground truncate">{user.email}</div>
             </div>
-            <button onClick={() => {logout();nav({ to: "/login" });}} className="size-9 rounded-lg bg-white grid place-items-center hover:bg-destructive hover:text-white transition shrink-0" aria-label="Logout"><LogOut className="size-4" /></button>
+            <button
+              onClick={() => { logout(); nav({ to: "/login" }); }}
+              className="size-9 rounded-lg bg-white grid place-items-center hover:bg-destructive hover:text-white transition shrink-0"
+              aria-label="Logout"
+            >
+              <LogOut className="size-4" />
+            </button>
           </div>
         </div>
       </aside>
@@ -74,8 +82,10 @@ export function DashboardShell({ items, title, requireRole }) {
             <span className="absolute top-2 right-2 size-2 rounded-full bg-primary" />
           </button>
           <div className="hidden sm:flex items-center gap-2 px-3 h-10 rounded-full bg-muted shrink-0">
-            <div className="size-7 rounded-full gradient-primary grid place-items-center text-white text-xs font-semibold">{user.name[0]}</div>
-            <span className="text-sm font-medium max-w-[6rem] truncate">{user.name.split(" ")[0]}</span>
+            <div className="size-7 rounded-full gradient-primary grid place-items-center text-white text-xs font-semibold">
+              {user.name?.[0] ?? "A"}
+            </div>
+            <span className="text-sm font-medium max-w-[6rem] truncate">{user.name?.split(" ")[0]}</span>
             <ChevronDown className="size-4 text-muted-foreground" />
           </div>
         </header>
@@ -85,6 +95,6 @@ export function DashboardShell({ items, title, requireRole }) {
       </div>
 
       {open && <div onClick={() => setOpen(false)} className="fixed inset-0 z-30 bg-black/40 lg:hidden" />}
-    </div>);
-
+    </div>
+  );
 }
